@@ -8,6 +8,17 @@ import torch.utils.data as data
 from datetime import timedelta
 
 
+# Get cpu, gpu or mps device for training.
+device = (
+    "cuda"
+    if torch.cuda.is_available()
+    else "mps"
+    if torch.backends.mps.is_available()
+    else "cpu"
+)
+print(f"Using {device} device")
+
+
 def fetch_data():
     filename = "TA-2"
     series = pd.read_csv(# "WVR_UdeC.dat",
@@ -38,6 +49,7 @@ def fetch_data():
 class AirModel(nn.Module):
     def __init__(self):
         super().__init__()
+        self.to(device)
         self.lstm = nn.LSTM(input_size=1,
                             hidden_size=200,
                             num_layers=1,
