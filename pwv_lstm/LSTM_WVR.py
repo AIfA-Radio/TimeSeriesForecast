@@ -6,6 +6,7 @@ import torch.nn as nn
 import torch.optim as optim
 import torch.utils.data as data
 from datetime import timedelta
+from timeit import default_timer as default_timer
 
 
 # Get cpu, gpu or mps device for training.
@@ -79,6 +80,7 @@ def create_dataset(dataset, lookback):
 
 
 def main():
+    _start_time = default_timer()
     lookback = 30
 
     df = fetch_data()
@@ -138,6 +140,7 @@ def main():
         test_plot[test_size + lookback:len(timeseries)] = \
             model(X_test)[:, -1, :]
     # plot
+    print("Time consumed: {}".format(default_timer() - _start_time))
     plt.plot(timeseries)
     plt.plot(train_plot, c='r')
     plt.plot(test_plot, c='g')
